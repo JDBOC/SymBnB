@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang='fr'>
+<head>
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mon modèle</title>
+  <h1>{{ title }}</h1>
+  <p>
+    {% if age > 18 %}
+  <p> vous êtes un adulte</p>
+  {% else %}
+    <p>vous êtes un gamin</p>
+  {% endif %}
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur beatae culpa cum cupiditate dolore dolores
+  dolorum earum expedita illum impedit inventore nobis quis repellendus rerum similique velit, voluptate voluptates?</p>
+
+  {% for prenom, age in tableau %}
+    <p>{{ prenom }} a {{ age }}</p>
+  {% endfor %}
+</head>
+<body>
+
+</body>
+</html>
