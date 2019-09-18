@@ -1,25 +1,125 @@
-<!doctype html>
-<html lang='fr'>
-<head>
-  <meta charset='utf-8'>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Mon modèle</title>
-  <h1>{{ title }}</h1>
-  <p>
-    {% if age > 18 %}
-  <p> vous êtes un adulte</p>
-  {% else %}
-    <p>vous êtes un gamin</p>
-  {% endif %}
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur beatae culpa cum cupiditate dolore dolores
-  dolorum earum expedita illum impedit inventore nobis quis repellendus rerum similique velit, voluptate voluptates?</p>
+{% extends 'base.html.twig' %}
 
-  {% for prenom, age in tableau %}
-    <p>{{ prenom }} a {{ age }}</p>
-  {% endfor %}
-</head>
-<body>
+{% block title %}Bienvenue sur ce site de recherche de location{% endblock %}
 
-</body>
-</html>
+{% block body %}
+  <div class="container">
+    <div class="jumbotron mt-3">
+      <h1 class="display-3">Bienvenue sur SymBnB!</h1>
+      <p class="lead">Ceci est un projet bac à sable sur le principe de AirBnB pour réviser les fondements de Symfony et
+        bien plus encore </p>
+      <hr class="my-4">
+      <p>Vous cherchez un logement pour vos déplacements personnels ou professionnels c'est là que ça se passe</p>
+      <p class="lead mt-6">
+        <a class="btn btn-primary btn-lg" href="#" role="button">Voir les annonces</a>
+      </p>
+    </div>
+
+    <h2 class="mt-3">Nos appartements stars du moment</h2>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card bg-light mb-3">
+          <div class="card-header text-center">
+            3 chambres, <strong>49&euro; / nuit</strong> <br>
+            <small>pas encore noté</small>
+          </div>
+          <img src="http://placehold.it/1000x400" alt="image de description du bien"
+               style="height: 200px; width: 100%; display: block">
+          <div class="card-body">
+            <h4 class="card-title">
+              Super appart
+            </h4>
+            <p class="card-text">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias harum illo minima, nam nisi pariatur
+              quae quod temporibus velit.
+            </p>
+            <a href="#" class="btn btn-secondary">plus d'infos</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-light mb-3">
+          <div class="card-header text-center">
+            3 chambres, <strong>49&euro; / nuit</strong> <br>
+            <small>pas encore noté</small>
+          </div>
+          <img src="http://placehold.it/1000x400" alt="image de description du bien"
+               style="height: 200px; width: 100%; display: block">
+          <div class="card-body">
+            <h4 class="card-title">
+              Super appart
+            </h4>
+            <p class="card-text">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias harum illo minima, nam nisi pariatur
+              quae quod temporibus velit.
+            </p>
+            <a href="#" class="btn btn-secondary">plus d'infos</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-light mb-3">
+          <div class="card-header text-center">
+            3 chambres, <strong>49&euro; / nuit</strong> <br>
+            <small>pas encore noté</small>
+          </div>
+          <img src="http://placehold.it/1000x400" alt="image de description du bien"
+               style="height: 200px; width: 100%; display: block">
+          <div class="card-body">
+            <h4 class="card-title">
+              Super appart
+            </h4>
+            <p class="card-text">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias harum illo minima, nam nisi pariatur
+              quae quod temporibus velit.
+            </p>
+            <a href="#" class="btn btn-secondary">plus d'infos</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="mt-3 mb-5">Nos proprios</h2>
+
+    <div class="row">
+      <div class="col">
+        <div class="card border-secondary mb3">
+          <div class="card-body">
+            <h4 class="card-title">JD BOC</h4>
+            <hr>
+
+            <div class="card-text">
+              <img src="http://placehold.it/64x64" alt="avatar propriétaire" class="float-left mr-3">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda atque non quis. Eos, non,
+                quibusdam?</p>
+              <a href="#" class="btn btn-success float-right">plus d'infos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card border-secondary mb3">
+          <div class="card-body">
+            <h4 class="card-title">JD BOC</h4>
+            <hr>
+
+            <div class="card-text">
+              <img src="http://placehold.it/64x64" alt="avatar propriétaire" class="float-left mr-3">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda atque non quis. Eos, non,
+                quibusdam?</p>
+              <a href="#" class="btn btn-success float-right">plus d'infos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+{% endblock %}

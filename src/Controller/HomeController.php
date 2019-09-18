@@ -11,10 +11,18 @@
   class HomeController extends AbstractController {
 
     /**
-     * @Route("/hello", name="hello")
+     * @Route("/hello/{prenom}/age/{age}", name="hello")
+     * @Route("/salut", name="hello_base")
+     * @Route("/hello/{prenom}", name="hello_prenom")
      */
-    public function hello(){
-      return new Response("coucou toi");
+    public function hello($prenom = "anon", $age = 0){
+      return $this->render (
+        'hello.html.twig',
+        [
+          'prenom' => $prenom,
+          'age' => $age
+        ]
+      );
     }
 
     /**
