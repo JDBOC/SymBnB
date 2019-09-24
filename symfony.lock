@@ -1,4 +1,7 @@
 {
+    "cocur/slugify": {
+        "version": "v3.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -20,6 +23,9 @@
     "doctrine/common": {
         "version": "v2.11.0"
     },
+    "doctrine/data-fixtures": {
+        "version": "v1.3.2"
+    },
     "doctrine/dbal": {
         "version": "v2.9.2"
     },
@@ -40,6 +46,18 @@
     },
     "doctrine/doctrine-cache-bundle": {
         "version": "1.3.5"
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "fc52d86631a6dfd9fdf3381d0b7e3df2069e51b3"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
+        ]
     },
     "doctrine/doctrine-migrations-bundle": {
         "version": "1.2",
@@ -95,6 +113,21 @@
     },
     "fig/link-util": {
         "version": "1.0.0"
+    },
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
+        },
+        "files": [
+            "config/packages/fos_ckeditor.yaml"
+        ]
+    },
+    "fzaninotto/faker": {
+        "version": "v1.8.0"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Création d'une nouvelle annonce {% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+
+<div class="container">
+  <h1>Création d'une annonce</h1>
+
+  {{ form_start(form) }}
+
+  {{ form_widget(form) }}
+
+  <button type="submit" class="btn btn-primary float-right">Enregistrer cette annonce</button>
+
+
+  {{ form_end(form) }}
+
+  {% endblock %}
+
+  {% block _ad_Images_widget %}
+  <p>
+    Téléchargez les photos du bien
+  </p><div class="form-group">
+  {{ form_widget(form) }}
+
+    <button type="button" id="add-image" class="btn btn-outline-primary">Ajouter</button>
+  </div>
+
+</div>
+{% endblock _ad_Images_widget %}
+
+
+
+
+{% block _ad_Images_entry_row %}
+
+  {{ form_widget(form) }}
+{% endblock %}
+
+
+
+{%  block _ad_Images_entry_widget %}
+<div class="form-group">
+  <div class="row">
+  <div class="col">
+{{ form_widget(form.url) }}
+  </div>
+  <div class="col">
+    {{ form_widget(form.caption) }}
+  </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+  <script>
+    $('#add-image').click(function(){
+        //permet de recup le numéro du prochain champs
+        const index = $('#ad_Images div.form-group').lenght;
+
+        //recup proto des entrées
+        const tmpl = $('#ad_Images').data('prototype');
+        console.log(tmpl);
+    });
+
+
+  </script>
+
+{% endblock %}
