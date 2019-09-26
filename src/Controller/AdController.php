@@ -4,6 +4,7 @@
 
   use App\Entity\Ad;
   use App\Entity\Image;
+  use App\Entity\User;
   use App\Form\AdType;
   use App\Repository\AdRepository;
   use Doctrine\Common\Persistence\ObjectManager;
@@ -110,11 +111,10 @@
     /**
      * permet d'afficher une seule annonce
      * @Route("/ad/{slug}", name="ad_show")
-     * @param $slug
      * @param Ad $ad
      * @return Response
      */
-    public function show($slug , Ad $ad)
+    public function show(Ad $ad)
     {
       return $this->render ( 'ad/show.html.twig' , [
         'ad' => $ad
