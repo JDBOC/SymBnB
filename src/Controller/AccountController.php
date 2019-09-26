@@ -3,6 +3,7 @@
   namespace App\Controller;
 
   use App\Entity\User;
+  use App\Form\AccountType;
   use App\Form\RegistrationType;
   use Doctrine\Common\Persistence\ObjectManager;
   use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,6 +57,45 @@
       return $this->render ( 'account/registration.html.twig' , [
         'form' => $form->createView ()
       ] );
+    }
+
+    /**
+     * Edition profil utilisateur
+     *
+     * @Route("/account/profile", name="edit_account")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function profile(Request $request, ObjectManager $manager): Response
+    {
+
+      $user = $this->getUser ();
+      $form = $this->createForm (AccountType::class, $user);
+
+      $form ->handleRequest ($request);
+
+      if ($form -> isSubmitted () && $form -> isValid ()) {
+        $manager->persist ( $user );
+        $manager->flush ();
+
+        $this->addFlash ('success', "Données modifiées avec succès");
+
+      }
+    return $this->render('account/profile.html.twig', [
+      'form' => $form->createView ()
+    ]);
+    }
+
+    /**
+     * Modification MDP
+     *
+     * @Route("/account/password-update", name="update_password")
+     *
+     * @return Response
+     */
+    public function updatepassword() {
+    return $this->render ('account/password.html.twig');
     }
 
     /**
