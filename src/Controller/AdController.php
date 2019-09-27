@@ -19,6 +19,28 @@
   class AdController extends AbstractController
   {
     /**
+     * @Route("/ad/{slug}/delete", name="ad_delete")
+     * @Security("is_granted('ROLE_USER') and user == ad.getAuthor()", message="Permission refusée")
+     * @param Ad $ad
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function delete(Ad $ad, ObjectManager $manager): Response
+    {
+      $manager->remove ($ad);
+      $manager->flush ();
+
+      $this->addFlash (
+        'success',
+        "L'annonce {$ad->getTitle ()} a bien été supprimée"
+      );
+
+      return $this->redirectToRoute ('ad');
+
+    }
+
+
+    /**
      * @Route("/ad", name="ad")
      * @param AdRepository $repo
      * @return Response
@@ -127,6 +149,7 @@
         'ad' => $ad
       ] );
     }
+
 
 
   }

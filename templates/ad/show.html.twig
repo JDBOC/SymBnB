@@ -18,7 +18,10 @@
       <a href="#" class="btn btn-primary mb-5">Réserver cette location</a>
 
       {% if app.user and app.user == ad.author %}
-      <a href="{{ path('ad_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
+
+        <a href="{{ path('ad_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
+        <a href="{{ path('ad_delete', {'slug': ad.slug}) }}" class="btn btn-danger"
+           onclick="return confirm(`Confirmer la suppression de cette annonce : {{ ad.title }} ?`)">Suppression</a>
       {% endif %}
     </div>
   </div>
@@ -42,8 +45,8 @@
                 <img src="{{ image.url }}" class="d-block w-100" alt="...">
               </div>
               <div class="carousel-caption d-none d-md-block">
-                <h5>{{ad.title}}</h5>
-                <p>{{image.caption}}</p>
+                <h5>{{ ad.title }}</h5>
+                <p>{{ image.caption }}</p>
               </div>
             {% endfor %}
           </div>
@@ -64,14 +67,14 @@
         <div class="row mb-3 align-items-center">
           <div class="col-2 mr-5">
             <a href="{{ path('user_show', {'slug': a.slug}) }}">
-            <img src="{{ a.picture }}" class="avatar avatar-medium" alt="{{ a.fullName }}">
+              <img src="{{ a.picture }}" class="avatar avatar-medium" alt="{{ a.fullName }}">
             </a>
           </div>
           <div class="col ml-3">
             <a href="{{ path('user_show', {'slug': a.slug}) }}">
-            <h3>{{ a.fullName }}</h3>
+              <h3>{{ a.fullName }}</h3>
             </a>
-            <span class="badge badge-primary">{{a.ads | length}} annonces</span>
+            <span class="badge badge-primary">{{ a.ads | length }} annonces</span>
           </div>
         </div>
         {{ a.description | raw }}
