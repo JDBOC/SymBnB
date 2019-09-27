@@ -19,8 +19,19 @@
   class AccountController extends AbstractController
   {
     /**
+     * @Route("/account", name="account_index")
+     */
+    public function myAccount() {
+      return $this->render ('user/index.html.twig', [
+        'user' => $this->getUser ()
+      ]);
+    }
+
+
+    /**
      * @Route("/login", name="account_login")
      *
+     * @param AuthenticationUtils $utils
      * @return Response
      */
     public function login(AuthenticationUtils $utils)
@@ -38,8 +49,12 @@
      * formulaire d'inscription
      *
      * @Route("/register", name="account_register")
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @param UserPasswordEncoderInterface $encoder
+     * @return Response
      */
-    public function register(Request $request , ObjectManager $manager , UserPasswordEncoderInterface $encoder)
+    public function register(Request $request , ObjectManager $manager , UserPasswordEncoderInterface $encoder): Response
     {
       $user = new User;
       $form = $this->createForm ( RegistrationType::class , $user );
@@ -62,12 +77,14 @@
       ] );
     }
 
+
     /**
      * Edition profil utilisateur
      *
      * @Route("/account/profile", name="edit_account")
      *
      * @param Request $request
+     * @param ObjectManager $manager
      * @return Response
      */
     public function profile(Request $request , ObjectManager $manager): Response
@@ -95,6 +112,9 @@
      *
      * @Route("/account/password-update", name="update_password")
      *
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @param UserPasswordEncoderInterface $encoder
      * @return Response
      */
     public function updatepassword(Request $request , ObjectManager $manager , UserPasswordEncoderInterface $encoder)
@@ -111,8 +131,7 @@
         //Verification MDP actuel avec celui de l'utilisateur
         if (!password_verify ( $passwordUpdate->getOldPassword () , $user->getHash () )) {
 
-          $form->get ('oldPassword')->addError (new FormError("Mot de passe incorrect"));
-
+          $form->get ( 'oldPassword' )->addError ( new FormError( 'Mot de passe incorrect' ) );
 
 
         } else {
@@ -125,23 +144,39 @@
           $manager->persist ( $user );
           $manager->flush ();
 
-          $this->addFlash ( 'success' , "modification effectuée" );
+          $this->addFlash ( 'success' , 'modification effectuée' );
 
           return $this->redirectToRoute ( 'homepage' );
         }
       }
-        return $this->render ( 'account/password.html.twig' , [
-          'form' => $form->createView ()
-        ] );
-      }
+      return $this->render ( 'account/password.html.twig' , [
+        'form' => $form->createView ()
+      ] );
+    }
 
+
+
+    /**
+     * affichage du profil
+     *
+     * @Route("/account/show", name="account")
+     *
+     * @return Response
+     */
+    public function show()
+    {
+      return $this->render ( 'user/index.html.twig' );
+    }
 
     /**
      * @Route ("/logout", name="account_logout")
      * @return void
      */
-    public function logout()
+    public function logout(): void
     {
 
     }
+
+
+
   }
