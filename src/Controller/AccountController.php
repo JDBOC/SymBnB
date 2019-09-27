@@ -8,6 +8,7 @@
   use App\Form\PasswordUpdateType;
   use App\Form\RegistrationType;
   use Doctrine\Common\Persistence\ObjectManager;
+  use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
   use Symfony\Component\Form\FormError;
   use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@
   {
     /**
      * @Route("/account", name="account_index")
+     * @IsGranted("ROLE_USER")
      */
     public function myAccount() {
       return $this->render ('user/index.html.twig', [
@@ -82,6 +84,7 @@
      * Edition profil utilisateur
      *
      * @Route("/account/profile", name="edit_account")
+     * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param ObjectManager $manager
@@ -111,6 +114,7 @@
      * Modification MDP
      *
      * @Route("/account/password-update", name="update_password")
+     * @IsGranted("ROLE_USER")
      *
      * @param Request $request
      * @param ObjectManager $manager

@@ -8,10 +8,13 @@
   use App\Form\AdType;
   use App\Repository\AdRepository;
   use Doctrine\Common\Persistence\ObjectManager;
+  use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+  use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
   use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
   use Symfony\Component\HttpFoundation\Request;
   use Symfony\Component\HttpFoundation\Response;
   use Symfony\Component\Routing\Annotation\Route;
+
 
   class AdController extends AbstractController
   {
@@ -33,6 +36,7 @@
      * création d'une annonce
      *
      * *@Route("ad/new", name="ad_create")
+     * @IsGranted("ROLE_USER")
      *
      * @return Response
      */
@@ -75,6 +79,7 @@
      * formulaire d'édition
      *
      * @Route("/ad/{slug}/edit", name="ad_edit")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="vous ne pouvez pas modifier les annonces des autres utilisateurs")
      *
      * @return Response
      *
