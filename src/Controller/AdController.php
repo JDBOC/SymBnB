@@ -52,6 +52,8 @@
 
         }
 
+        $ad->setAuthor ($this->getUser ());
+
         $manager->persist ( $ad );
         $manager->flush ();
 
