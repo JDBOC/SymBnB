@@ -4,7 +4,6 @@
 
   use App\Entity\Ad;
   use App\Entity\Image;
-  use App\Entity\User;
   use App\Form\AdType;
   use App\Repository\AdRepository;
   use Doctrine\Common\Persistence\ObjectManager;
@@ -18,27 +17,6 @@
 
   class AdController extends AbstractController
   {
-    /**
-     * @Route("/ad/{slug}/delete", name="ad_delete")
-     * @Security("is_granted('ROLE_USER') and user == ad.getAuthor()", message="Permission refusée")
-     * @param Ad $ad
-     * @param ObjectManager $manager
-     * @return Response
-     */
-    public function delete(Ad $ad, ObjectManager $manager): Response
-    {
-      $manager->remove ($ad);
-      $manager->flush ();
-
-      $this->addFlash (
-        'success',
-        "L'annonce {$ad->getTitle ()} a bien été supprimée"
-      );
-
-      return $this->redirectToRoute ('ad');
-
-    }
-
 
     /**
      * @Route("/ad", name="ad")
@@ -72,19 +50,19 @@
 
       if ($form->isSubmitted () && $form->IsValid ()) {
 
-        foreach ($ad->getImages () as  $image){
-          $image->setAd ($ad);
-          $manager->persist($image);
+        foreach ($ad->getImages () as $image) {
+          $image->setAd ( $ad );
+          $manager->persist ( $image );
 
         }
 
-        $ad->setAuthor ($this->getUser ());
+        $ad->setAuthor ( $this->getUser () );
 
         $manager->persist ( $ad );
         $manager->flush ();
 
         $this->addFlash (
-          'success', "l'annonce {$ad->getTitle ()} a bien été enregistrée"
+          'success' , "l'annonce {$ad->getTitle ()} a bien été enregistrée"
         );
 
         return $this->redirectToRoute ( 'ad_show' , [
@@ -101,20 +79,23 @@
      * formulaire d'édition
      *
      * @Route("/ad/{slug}/edit", name="ad_edit")
-     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="vous ne pouvez pas modifier les annonces des autres utilisateurs")
+     * @Security("is_granted('ROLE_USER') and user == ad.getAuthor()", message="vous ne pouvez pas modifier les annonces des autres utilisateurs")
      *
+     * @param Request $request
+     * @param Ad $ad
+     * @param ObjectManager $manager
      * @return Response
-     *
      */
-    public function edit(Request $request, Ad $ad, ObjectManager $manager){
-        $form = $this->createForm (AdType::class, $ad);
-        $form->handleRequest ($request);
+    public function edit(Request $request , Ad $ad , ObjectManager $manager)
+    {
+      $form = $this->createForm ( AdType::class , $ad );
+      $form->handleRequest ( $request );
 
       if ($form->isSubmitted () && $form->IsValid ()) {
 
-        foreach ($ad->getImages () as  $image){
-          $image->setAd ($ad);
-          $manager->persist($image);
+        foreach ($ad->getImages () as $image) {
+          $image->setAd ( $ad );
+          $manager->persist ( $image );
 
         }
 
@@ -122,7 +103,7 @@
         $manager->flush ();
 
         $this->addFlash (
-          'success', "l'annonce {$ad->getTitle ()} a bien été modifiée"
+          'success' , "l'annonce {$ad->getTitle ()} a bien été modifiée"
         );
 
         return $this->redirectToRoute ( 'ad_show' , [
@@ -130,12 +111,38 @@
         ] );
       }
 
-        return $this->render ('ad/edit.html.twig', [
-          'form' => $form->createView (),
-          'ad' => $ad
-        ]);
+      return $this->render ( 'ad/edit.html.twig' , [
+        'form' => $form->createView () ,
+        'ad' => $ad
+      ] );
 
     }
+
+    /**
+     * @Route("/ad/{slug}/delete", name="ad_delete")
+     * @Security("is_granted('ROLE_USER') and user == ad.getAuthor()", message="Permission refusée")
+     * @param Ad $ad
+     * @param Image $image
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function delete(Ad $ad , Image $image , ObjectManager $manager)
+    {
+      if ($image->getAd () === $ad->getId ()) {
+        $manager->remove ( $image );
+        $manager->remove ( $ad );
+      }
+      $manager->flush ();
+
+      $this->addFlash (
+        'success' ,
+        "L'annonce {$ad->getTitle ()} a bien été supprimée"
+      );
+
+      return $this->redirectToRoute ( 'ad' );
+
+    }
+
 
     /**
      * permet d'afficher une seule annonce
@@ -149,7 +156,6 @@
         'ad' => $ad
       ] );
     }
-
 
 
   }
