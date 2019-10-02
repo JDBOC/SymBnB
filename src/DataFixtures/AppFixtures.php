@@ -3,6 +3,7 @@
   namespace App\DataFixtures;
 
   use App\Entity\Ad;
+  use App\Entity\Booking;
   use App\Entity\Image;
   use App\Entity\Role;
   use App\Entity\User;
@@ -31,13 +32,13 @@
 
       $adminUser = new User();
       $adminUser->setFirstName ( 'Jean Daniel' )
-                ->setLastName ( 'Boccara' )
-                ->setEmail ( 'jdboc@live.fr' )
-                ->setHash ( $this->encoder->encodePassword ( $adminUser , 'password' ) )
-                ->setPicture ( 'https://randomuser.me/api/portraits/lego/1.jpg' )
-                ->setIntroduction ( $faker->sentence () )
-                ->setDescription ( '<p>' . join ( '</p><p>' , $faker->paragraphs ( 5 ) ) . '</p>' )
-                ->addUserRole ( $adminRole );
+        ->setLastName ( 'Boccara' )
+        ->setEmail ( 'jdboc@live.fr' )
+        ->setHash ( $this->encoder->encodePassword ( $adminUser , 'password' ) )
+        ->setPicture ( 'https://randomuser.me/api/portraits/lego/1.jpg' )
+        ->setIntroduction ( $faker->sentence () )
+        ->setDescription ( '<p>' . join ( '</p><p>' , $faker->paragraphs ( 5 ) ) . '</p>' )
+        ->addUserRole ( $adminRole );
       $manager->persist ( $adminUser );
 
 //gestion des utilisateurs
@@ -86,7 +87,7 @@
           ->setCoverImage ( $coverImage )
           ->setIntroduction ( $introduction )
           ->setContent ( $content )
-          ->setPrice ( mt_rand ( 35 , 800 ) )
+          ->setPrice ( mt_rand ( 35 , 135 ) )
           ->setRooms ( mt_rand ( 1 , 6 ) )
           ->setAuthor ( $user );
 
@@ -100,8 +101,40 @@
           $manager->persist ( $image );
         }
 
+        //gestion des Réservations
+        for ($j = 1 , $jMax = random_int ( 1 , 10 ); $j <= $jMax; $j++) {
+          $booking = new Booking();
+          $createdAt = $faker->dateTimeBetween ( '-6 months' );
+          $startDate = $faker->dateTimeBetween ( '-3 months' );
+
+          $duration = random_int ( 3 , 15 );
+          $endDate = (clone $startDate)->modify ( "+$duration days" );
+
+          $amount = $ad->getPrice () * $duration;
+
+          $booker = $users[mt_rand ( 0 , count ( $users ) - 1 )];
+          $comment = $faker->paragraph;
+
+
+          $booking->setBooker ( $booker )
+                  ->setAd ( $ad )
+                  ->setStartDate ( $startDate )
+                  ->setEndDate ( $endDate )
+                  ->setCreatedAt ( $createdAt )
+                  ->setAmount ( $amount )
+                  ->setComment ($comment);
+
+          $manager->persist ($booking);
+
+        }
+
+
         $manager->persist ( $ad );
       }
       $manager->flush ();
     }
+
+
   }
+
+

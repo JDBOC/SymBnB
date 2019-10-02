@@ -38,6 +38,8 @@
      * *@Route("ad/new", name="ad_create")
      * @IsGranted("ROLE_USER")
      *
+     * @param Request $request
+     * @param ObjectManager $manager
      * @return Response
      */
     public function create(Request $request , ObjectManager $manager)
@@ -126,13 +128,15 @@
      * @param ObjectManager $manager
      * @return Response
      */
-    public function delete(Ad $ad , Image $image , ObjectManager $manager)
+    public function delete(Ad $ad , Image $image , ObjectManager $manager): Response
     {
       if ($image->getAd () === $ad->getId ()) {
-        $manager->remove ( $image );
+
         $manager->remove ( $ad );
+        $manager->remove ( $image );
+        $manager->flush ();
       }
-      $manager->flush ();
+
 
       $this->addFlash (
         'success' ,

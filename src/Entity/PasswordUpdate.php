@@ -49,9 +49,9 @@ class PasswordUpdate
         return $this->confirmPassword;
     }
 
-    public function setConfirmPassword(string $conformPassword): self
+    public function setConfirmPassword(string $confirmPassword): self
     {
-        $this->confirmPassword = $conformPassword;
+        $this->confirmPassword = $confirmPassword;
 
         return $this;
     }

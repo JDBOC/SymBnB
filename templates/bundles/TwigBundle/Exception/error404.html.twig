@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %} {% endblock %}
+
+{% block body %}
+
+<div class="container">
+<h2>Oups ! cette page n'existe pas</h2>
+  <p>Vous pouvez retourner à l'accueil</p>
+
+  <a href="{{ path('homepage') }}" class="btn btn-primary">Retour à l'acceuil</a>
+  <a href="{{ path('ad') }}" class="btn btn-success">Voir les annonces disponibles</a>
+</div>
+
+{% endblock %}
