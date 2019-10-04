@@ -173,6 +173,18 @@
     }
 
     /**
+     * @return Responsepermet d'affihcer la liste des résa faites par l'utilisateur
+     *
+     * @Route("/account/bookings", name="account_bookings")
+     *
+     * @return Response
+     */
+    public function bookings() {
+      return $this->render ('account/bookings.html.twig');
+    }
+
+
+    /**
      * @Route ("/logout", name="account_logout")
      * @return void
      */

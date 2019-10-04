@@ -41,6 +41,8 @@
     /**
      * @ORM\Column(type="datetime")
      * @Assert\Date(message="La date doit être au bon format")
+     * @Assert\GreaterThan("today", message="la date d'arrivée doit être ultèrieure à celle daujourd'hui")
+     * @Assert\GreaterThan(propertyPath="startDate", message="la date de départ doit être ultèrieure à la date d'arrivée")
      */
     private $endDate;
 
@@ -103,21 +105,21 @@
     public function isBookableDates()
     {
       // il faut connaitre les dates impossibles pour l'annonce
-      $notAvailableDays = $this->ad->getNotAvailableDays();
+      $notAvailableDays = $this->ad->getNotAvailableDays ();
 
       // il faut comparer les dates choisies avec les dates impossibles
       $bookingDays = $this->getDays ();
 
-      $formatDay = function($day) {
-        return $day->format('Y-m-d');
+      $formatDay = function ($day) {
+        return $day->format ( 'Y-m-d' );
       };
 
       //tableau qui contient mes journées en chaines de caracteres
-      $days             = array_map ($formatDay, $bookingDays);
-      $notAvailableDays = array_map ($formatDay, $notAvailableDays);
+      $days = array_map ( $formatDay , $bookingDays );
+      $notAvailableDays = array_map ( $formatDay , $notAvailableDays );
 
-      foreach ($days as $day){
-        if(array_search ($day, $notAvailableDays) !== false) return false;
+      foreach ($days as $day) {
+        if (array_search ( $day , $notAvailableDays ) !== false) return false;
       }
       return true;
     }
@@ -135,9 +137,9 @@
         86400
       );
 
-      $days = array_map (function ($dayTimestamp) {
-        return new DateTime(date ('Y-m-d', $dayTimestamp));
-      }, $resultat);
+      $days = array_map ( function ($dayTimestamp) {
+        return new DateTime( date ( 'Y-m-d' , $dayTimestamp ) );
+      } , $resultat );
       return $days;
     }
 
