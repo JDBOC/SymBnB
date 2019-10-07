@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{bootstrap-datepicker}" />
+    <file url="PROJECT" libraries="{89e753fb7b, bootstrap-datepicker}" />
     <includedPredefinedLibrary name="HTTP Response Handler" />
   </component>
 </project>

@@ -60,6 +60,39 @@
             <span class="sr-only">Next</span>
           </a>
         </div>
+        <hr>
+        {% if ad.comments|length > 0 %}
+          <h2>commentaires</h2>
+          <div class="alert alert-info">
+            <h4 class="alert-heading text-center">
+              <div class="row align-items-center">
+                <div class="col">Note moyenne
+                </div>
+                <div class="col">
+                  {% include 'partials/rating.html.twig' with {'rating': ad.avgRating} %}
+                  <br>
+                  <small>Moyenne sur la base de {{ ad.comments|length }} avis</small>
+                </div>
+              </div>
+            </h4>
+          </div>
+          {% for comment in ad.comments %}
+            <div class="bg-light rounded mb-3 py-3 px-3">
+              <strong>{{ comment.author.firstName }}</strong> a dit :
+              <blockquote>
+                {{ comment.content }}
+              </blockquote>
+              <strong>Note donnée : </strong>
+              {{ comment.rating }}
+
+              {% include 'partials/rating.html.twig' with {'rating': comment.rating} %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <h2>cette annonce n'a pas encore été notée</h2>
+
+
+        {% endif %}
 
 
       </div>

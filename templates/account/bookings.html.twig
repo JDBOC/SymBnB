@@ -8,9 +8,19 @@
       <p>Retrouvez ici toutes vos réservations</p>
     </div>
     {% for booking in app.user.bookings %}
+      {% set ad = booking.ad %}
       <div class="row mt-5">
         <div class="col-4">
           <img src="{{ booking.ad.coverImage }}" alt="Photo de l'annonce {{ booking.ad.title }}" class="img-fluid">
+          <div class="mt-3">
+            {% set comment = ad.commentFromAuthor(app.user) %}
+            {% if  comment is not null %}
+                <strong>Note donnée : </strong> {% include 'partials/rating.html.twig' with {'rating': comment.rating} %}
+            {% else %}
+                Vous n'avez pas encore noté ce séjour...
+              <a href="{{ path('booking_show', {'id': booking.id}) }}#comment" class="btn btn-link">Donner son avis</a>
+            {% endif %}
+          </div>
         </div>
         <div class="col-8">
           <h4>{{ booking.ad.title }}</h4>
@@ -19,6 +29,7 @@
             du {{ booking.startDate |  date('d/m/Y') }} au {{ booking.endDate | date('d/m/Y') }} ({{ booking.amount }}
             &euro;)
           </p>
+
           <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-info">Plus d'informations</a>
         </div>
       </div>

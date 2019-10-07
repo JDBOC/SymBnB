@@ -1,46 +1,42 @@
 <?php
 
-namespace App\Entity;
+  namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Length;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Cocur\Slugify\Slugify;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+  use Cocur\Slugify\Slugify;
+  use DateTime;
+  use Doctrine\Common\Collections\ArrayCollection;
+  use Doctrine\Common\Collections\Collection;
+  use Doctrine\ORM\Mapping as ORM;
+  use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+  use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\AdRepository")
- * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={"title"},
- *   message="une annonce a déjà ce titre")
- */
-class Ad
-{
+  /**
+   * @ORM\Entity(repositoryClass="App\Repository\AdRepository")
+   * @ORM\HasLifecycleCallbacks
+   * @UniqueEntity(fields={"title"},
+   *   message="une annonce a déjà ce titre")
+   */
+  class Ad
+  {
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $price;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=10, max=255, minMessage="Le titre doit faire plus de 10 caractères", maxMessage="le titre ne peut exceder 255 caractères")
      */
     private $title;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    protected $price;
-
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=20, minMessage="Le titre doit faire plus de 20 caractères")
@@ -88,140 +84,170 @@ class Ad
 
     public function __construct()
     {
-        $this->images = new ArrayCollection();
-        $this->bookings = new ArrayCollection();
-        $this->comments = new ArrayCollection();
+      $this->images = new ArrayCollection();
+      $this->bookings = new ArrayCollection();
+      $this->comments = new ArrayCollection();
     }
 
-  /**
-   * permet slug
-   *
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   *
-   * @return void
-   */
-    public function initializeSlug() {
-      if(empty($this->slug)) {
-          $slugify = new Slugify();
-          $this->slug = $slugify->slugify($this->title);
+    /**
+     * permet slug
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     * @return void
+     */
+    public function initializeSlug()
+    {
+      if (empty( $this->slug )) {
+        $slugify = new Slugify();
+        $this->slug = $slugify->slugify ( $this->title );
       }
     }
 
-  /**
-   * Permet d'obtenir un tableau des jours qui ne sont pas disponibles pour une réservation
-   *
-   * @return array
-   */
-  public function getNotAvailableDays() {
+    /**
+     * Permet de récupérer un commentaire quand on en est l'auteur
+     * @param User $author
+     * @return mixed|null
+     */
+    public function getCommentFromAuthor(User $author)
+    {
+      foreach ($this->comments as $comment) {
+        if ($comment->getAuthor () === $author) return $comment;
+      }
+      return null;
+    }
+
+    /***
+     * Moyenne des notes pour cette annonce
+     *
+     * @return float|int
+     */
+    public function getAvgRating()
+    {
+      $sum = array_reduce ( $this->comments->toArray () , function ($total , $comment) {
+        return $total + $comment->getRating ();
+      } , 0 );
+
+      if (count ( $this->comments ) > 0) return $sum / count ( $this->comments );
+
+      return 0;
+    }
+
+    /**
+     * Permet d'obtenir un tableau des jours qui ne sont pas disponibles pour une réservation
+     *
+     * @return array
+     */
+    public function getNotAvailableDays()
+    {
       $notAvailableDays = [];
 
       foreach ($this->bookings as $booking) {
         //calculer jours qui se trouvent entre date d'arrivée et de départ
         $resultat = range (
-          $booking->getStartDate()->getTimestamp(),
-          $booking->getEndDate()->getTimestamp(),
+          $booking->getStartDate ()->getTimestamp () ,
+          $booking->getEndDate ()->getTimestamp () ,
           86400
         );
-        $days = array_map (function ($dayTimestamp){
-          return new \DateTime(date ('Y-m-d', $dayTimestamp));
-        }, $resultat);
+        $days = array_map ( function ($dayTimestamp) {
+          return new DateTime( date ( 'Y-m-d' , $dayTimestamp ) );
+        } , $resultat );
 
-        $notAvailableDays = array_merge($notAvailableDays, $days);
+        $notAvailableDays = array_merge ( $notAvailableDays , $days );
 
       }
       return $notAvailableDays;
     }
 
 
-
     public function getId(): ?int
     {
-        return $this->id;
+      return $this->id;
     }
 
     public function getTitle(): ?string
     {
-        return $this->title;
+      return $this->title;
     }
 
     public function setTitle(string $title): self
     {
-        $this->title = $title;
+      $this->title = $title;
 
-        return $this;
+      return $this;
     }
 
     public function getSlug(): ?string
     {
-        return $this->slug;
+      return $this->slug;
     }
 
     public function setSlug(string $slug): self
     {
-        $this->slug = $slug;
+      $this->slug = $slug;
 
-        return $this;
+      return $this;
     }
 
     public function getprice(): ?float
     {
-        return $this->price;
+      return $this->price;
     }
 
     public function setPrice(float $price): self
     {
-        $this->price = $price;
+      $this->price = $price;
 
-        return $this;
+      return $this;
     }
 
     public function getIntroduction(): ?string
     {
-        return $this->introduction;
+      return $this->introduction;
     }
 
     public function setIntroduction(string $introduction): self
     {
-        $this->introduction = $introduction;
+      $this->introduction = $introduction;
 
-        return $this;
+      return $this;
     }
 
     public function getContent(): ?string
     {
-        return $this->content;
+      return $this->content;
     }
 
     public function setContent(string $content): self
     {
-        $this->content = $content;
+      $this->content = $content;
 
-        return $this;
+      return $this;
     }
 
     public function getCoverImage(): ?string
     {
-        return $this->coverImage;
+      return $this->coverImage;
     }
 
     public function setCoverImage(string $coverImage): self
     {
-        $this->coverImage = $coverImage;
+      $this->coverImage = $coverImage;
 
-        return $this;
+      return $this;
     }
 
     public function getRooms(): ?int
     {
-        return $this->rooms;
+      return $this->rooms;
     }
 
     public function setRooms(int $rooms): self
     {
-        $this->rooms = $rooms;
+      $this->rooms = $rooms;
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -229,42 +255,42 @@ class Ad
      */
     public function getImages(): Collection
     {
-        return $this->images;
+      return $this->images;
     }
 
     public function addImage(Image $image): self
     {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setAd($this);
-        }
+      if (!$this->images->contains ( $image )) {
+        $this->images[] = $image;
+        $image->setAd ( $this );
+      }
 
-        return $this;
+      return $this;
     }
 
     public function removeImage(Image $image): self
     {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            // set the owning side to null (unless already changed)
-            if ($image->getAd() === $this) {
-                $image->setAd(null);
-            }
+      if ($this->images->contains ( $image )) {
+        $this->images->removeElement ( $image );
+        // set the owning side to null (unless already changed)
+        if ($image->getAd () === $this) {
+          $image->setAd ( null );
         }
+      }
 
-        return $this;
+      return $this;
     }
 
     public function getAuthor(): ?User
     {
-        return $this->author;
+      return $this->author;
     }
 
     public function setAuthor(?User $author): self
     {
-        $this->author = $author;
+      $this->author = $author;
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -272,30 +298,30 @@ class Ad
      */
     public function getBookings(): Collection
     {
-        return $this->bookings;
+      return $this->bookings;
     }
 
     public function addBooking(Booking $booking): self
     {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings[] = $booking;
-            $booking->setAd($this);
-        }
+      if (!$this->bookings->contains ( $booking )) {
+        $this->bookings[] = $booking;
+        $booking->setAd ( $this );
+      }
 
-        return $this;
+      return $this;
     }
 
     public function removeBooking(Booking $booking): self
     {
-        if ($this->bookings->contains($booking)) {
-            $this->bookings->removeElement($booking);
-            // set the owning side to null (unless already changed)
-            if ($booking->getAd() === $this) {
-                $booking->setAd(null);
-            }
+      if ($this->bookings->contains ( $booking )) {
+        $this->bookings->removeElement ( $booking );
+        // set the owning side to null (unless already changed)
+        if ($booking->getAd () === $this) {
+          $booking->setAd ( null );
         }
+      }
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -303,29 +329,29 @@ class Ad
      */
     public function getComments(): Collection
     {
-        return $this->comments;
+      return $this->comments;
     }
 
     public function addComment(Comment $comment): self
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setAd($this);
-        }
+      if (!$this->comments->contains ( $comment )) {
+        $this->comments[] = $comment;
+        $comment->setAd ( $this );
+      }
 
-        return $this;
+      return $this;
     }
 
     public function removeComment(Comment $comment): self
     {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-            // set the owning side to null (unless already changed)
-            if ($comment->getAd() === $this) {
-                $comment->setAd(null);
-            }
+      if ($this->comments->contains ( $comment )) {
+        $this->comments->removeElement ( $comment );
+        // set the owning side to null (unless already changed)
+        if ($comment->getAd () === $this) {
+          $comment->setAd ( null );
         }
+      }
 
-        return $this;
+      return $this;
     }
-}
+  }

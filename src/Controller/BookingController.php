@@ -4,7 +4,9 @@
 
   use App\Entity\Ad;
   use App\Entity\Booking;
+  use App\Entity\Comment;
   use App\Form\BookingType;
+  use App\Form\CommentType;
   use Doctrine\Common\Persistence\ObjectManager;
   use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +34,7 @@
         $user = $this->getUser ();
 
         $booking->setBooker ( $user )
-                ->setAd ( $ad );
+          ->setAd ( $ad );
 
         //Si les dates ne sont pas disponibles, message d'erreur
         if (!$booking->isBookableDates ()) {
@@ -60,12 +62,33 @@
      * @Route("/booking/{id}", name="booking_show")
      *
      * @param Booking $booking
+     * @param ObjectManager $manager
+     * @param Request $request
      * @return Response
      */
-    public function show(Booking $booking)
+    public function show(Booking $booking , Request $request , ObjectManager $manager)
     {
+      $comment = new Comment();
+      $form = $this->createForm ( CommentType::class , $comment );
+      $form->handleRequest ( $request );
+
+      if ($form->isSubmitted () && $form->isValid ()) {
+        $comment->setAd ( $booking->getAd () )
+                ->setAuthor ( $this->getUser () )//  ->setCreatedAt (new \DateTime())
+        ;
+        $manager->persist ( $comment );
+        $manager->flush ();
+
+        $this->addFlash (
+          'success',
+          "Commentaire pris en compte !"
+        );
+      }
+
+
       return $this->render ( 'booking/show.html.twig' , [
-        'booking' => $booking
+        'booking' => $booking ,
+        'form' => $form->createView ()
       ] );
     }
 
