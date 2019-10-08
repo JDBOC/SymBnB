@@ -33,7 +33,7 @@
             </td>
             <td>
                 <a href="{{ path('admin_ad_edit', {'id': ads.id}) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                <a href="{{ path('admin_ad_delete', {'id': ads.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
             </td>
         </tr>
         {% endfor %}
