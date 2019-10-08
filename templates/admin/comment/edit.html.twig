@@ -1,0 +1,45 @@
+{% extends 'admin/baseAdmin.html.twig' %}
+
+  {% form_theme form 'ad/_collection.html.twig' %}
+
+  {% block body %}
+
+    <div class="container">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Annonce concernée :</th>
+          <th>Auteur :</th>
+          <th>Date de création :</th>
+          <th>Note :</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{ comment.ad.title }}</td>
+          <td>{{ comment.author.fullName }}</td>
+          <td>{{ comment.createdAt|date('d/m/Y') }}</td>
+          <td>{{ comment.rating }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h1>Modification d'une annonce</h1>
+      {{ form_start(form) }}
+      {{ form_row(form.content) }}
+      <button type="submit" class="btn btn-outline-danger float-right">
+      <i class="fas fa-check"></i>
+        Modifier
+      </button>
+      {{ form_end(form) }}
+
+
+    </div>
+  {% endblock %}
+
+
+
+
+
+{% block title %}Modification d'un commentaire{% endblock %}
+
