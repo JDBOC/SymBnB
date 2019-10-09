@@ -41,7 +41,7 @@
     /**
      * @ORM\Column(type="datetime")
      * @Assert\Date(message="La date doit être au bon format")
-     * @Assert\GreaterThan("today", message="la date d'arrivée doit être ultèrieure à celle daujourd'hui")
+     * @Assert\GreaterThan("today", message="la date d'arrivée doit être ultèrieure à celle daujourd'hui", groups={"front"})
      * @Assert\GreaterThan(propertyPath="startDate", message="la date de départ doit être ultèrieure à la date d'arrivée")
      */
     private $endDate;
@@ -65,7 +65,8 @@
     /**
      * Callback appelé à chaque fois qu'on crée une réservation
      * @ORM\PrePersist()
-     * @return void
+     * @ORM\PreUpdate()
+     *
      *
      */
 
@@ -77,7 +78,7 @@
       if (empty( $this->amount )) {
         // prix de l'annonce * le nombre de jours
 
-        $this->amount = $this->getAd ()->getprice () * $this->getDuration ();
+        $this->amount = $this->ad->getPrice() * $this->getDuration ();
       }
     }
 

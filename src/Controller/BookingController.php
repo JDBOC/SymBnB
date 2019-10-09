@@ -27,7 +27,7 @@
     public function book(Ad $ad , Request $request , ObjectManager $manager)
     {
       $booking = new Booking();
-      $form = $this->createForm ( BookingType::class , $booking );
+      $form = $this->createForm ( BookingType::class , $booking);
       $form->handleRequest ( $request );
 
       if ($form->isSubmitted () && $form->isValid ()) {

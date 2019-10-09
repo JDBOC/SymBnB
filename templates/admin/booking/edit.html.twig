@@ -1,0 +1,73 @@
+{% extends 'admin/baseAdmin.html.twig' %}
+
+  {% form_theme form _self %}
+{% block stylesheets %}
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
+
+{% endblock %}
+  {% block body %}
+
+    <div class="container">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Identifiant</th>
+          <th>Date de création</th>
+          <th>Visiteur</th>
+          <th>Annonce concernée</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{ booking.id }}</td>
+          <td>{{ booking.createdAt|date('d/m/Y') }}</td>
+          <td>{{ booking.booker.fullName }}</td>
+          <td>{{ booking.ad.title }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      {{ form_start(form) }}
+      <div class="alert alert-light">
+        <h2>Indiquez nous les dates souhaitées</h2>
+
+        <div class="row">
+          <div class="col">
+            {{ form_row(form.startDate) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.endDate) }}
+          </div>
+        </div>
+      </div>
+
+      {{ form_widget(form) }}
+      <button type="submit" class="btn btn-outline-success">Valider</button>
+      {{ form_end(form) }}
+    </div>
+  {% endblock %}
+{% block javascripts %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+  <script>
+      $(document).ready(function () {
+          $('#booking_startDate, #booking_endDate').datepicker({
+              format: 'dd/mm/yyyy',
+              datesDisabled: [
+                {% for day in booking.ad.notAvailableDays %}
+                  "{{ day.format('d/m/Y') }}",
+                {% endfor %}
+              ],
+              startDate: new Date()
+          });
+      })
+
+  </script>
+
+{% endblock %}
+
+
+{% block title %}Modification d'une réservation{% endblock %}
+
