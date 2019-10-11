@@ -3,42 +3,60 @@
 {% block title %}Interface d'administration{% endblock %}
 
 {% block body %}
-<div class="container-fluid">
+  <div class="container-fluid">
     <h1 class="my-5">Gestion des annonces</h1>
     <table class="table table-hover">
-        <thead>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Réservations</th>
+        <th>Note</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for ads in pagination.data %}
         <tr>
-            <th>Id</th>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Réservations</th>
-            <th>Note</th>
-            <th>Actions</th>
+          <td></td>
+          <td>{{ ads.title }}</td>
+          <td>
+            <img src="{{ ads.author.picture }}" alt="Avatar de {{ ads.author.fullName }}"
+                 class="avatar avatar-mini mr-2">
+            {{ ads.author.fullName }}
+          </td>
+          <td>
+            <span class="badge badge-primary rounded"> {{ ads.bookings | length }}</span>
+          </td>
+          <td>
+            <span class="badge badge-primary rounded">{{ ads.AvgRating | number_format(1, ',') }}</span>
+          </td>
+          <td>
+            <a href="{{ path('admin_ad_edit', {'id': ads.id}) }}" class="btn btn-primary"><i
+                      class="fas fa-edit"></i></a>
+            <a href="{{ path('admin_ad_delete', {'id': ads.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+          </td>
         </tr>
-        </thead>
-        <tbody>
-        {% for ads in ad %}
-        <tr>
-            <td> </td>
-            <td>{{ ads.title }}</td>
-            <td>
-                <img src="{{ ads.author.picture }}" alt="Avatar de {{ ads.author.fullName }}" class="avatar avatar-mini mr-2">
-                {{ ads.author.fullName }}
-            </td>
-            <td>
-                <span class="badge badge-primary rounded"> {{ ads.bookings | length }}</span>
-            </td>
-            <td>
-                <span class="badge badge-primary rounded">{{ ads.AvgRating | number_format(1, ',')}}</span>
-            </td>
-            <td>
-                <a href="{{ path('admin_ad_edit', {'id': ads.id}) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                <a href="{{ path('admin_ad_delete', {'id': ads.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-        
+      {% endfor %}
+      </tbody>
     </table>
-</div>
+    <div class="d-flex justify-content-center">
+      {% set page = pagination.currentPage %}
+      {% set pages = pagination.pages %}
+      <ul class="pagination">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+          <a class="page-link" href="{{ path('admin_ad_index', {'page': page-1}) }}">&laquo;</a>
+        </li>
+        {% for i in 1..pages %}
+          <li class="page-item {% if page == i %} active {% endif %}">
+            <a class="page-link" href="{{ path('admin_ad_index', {'page': i}) }}">{{ i }}</a>
+          </li>
+        {% endfor %}
+        <li class="page-item {% if page == pages %}disabled{% endif %}">
+          <a class="page-link" href="{{ path('admin_ad_index', {'page': page+1}) }}">&raquo;</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 {% endblock %}
