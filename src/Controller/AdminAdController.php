@@ -25,7 +25,6 @@ class AdminAdController extends AbstractController
      $pagination -> setEntityClass (Ad::class)
                   ->setCurrentPage ($page);
 
-
        return $this->render('admin/ad/index.html.twig', [
             'pagination' => $pagination
         ]);

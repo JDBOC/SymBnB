@@ -26,6 +26,7 @@
     {
       $pagination ->setEntityClass ( Booking::class )
                   ->setCurrentPage ( $page );
+
       return $this->render ( 'admin/booking/index.html.twig' , [
         'pagination' => $pagination
       ] );
