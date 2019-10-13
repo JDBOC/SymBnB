@@ -1,22 +1,36 @@
 <?php
 
-namespace App\Repository;
+  namespace App\Repository;
 
-use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+  use App\Entity\User;
+  use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+  use Doctrine\Common\Persistence\ManagerRegistry;
 
-/**
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class UserRepository extends ServiceEntityRepository
-{
+  /**
+   * @method User|null find($id , $lockMode = null , $lockVersion = null)
+   * @method User|null findOneBy(array $criteria , array $orderBy = null)
+   * @method User[]    findAll()
+   * @method User[]    findBy(array $criteria , array $orderBy = null , $limit = null , $offset = null)
+   */
+  class UserRepository extends ServiceEntityRepository
+  {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+      parent::__construct ( $registry , User::class );
+    }
+
+    public function findBestUsers($limit = 2)
+    {
+      return $this->createQueryBuilder ( 'u' )
+        ->join ( 'u.ads' , 'a' )
+        ->join ( 'a.comments' , 'c' )
+        ->select ( 'u as user, AVG(c.rating) as avgRatings, COUNT(c) as sumComments' )
+        ->groupBy ( 'u' )
+        ->having ( 'sumComments > 4' )
+        ->orderBy ( 'avgRatings' , 'DESC' )
+        ->setMaxResults ( $limit )
+        ->getQuery ()
+        ->getResult ();
     }
 
     // /**
@@ -47,4 +61,4 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
-}
+  }
