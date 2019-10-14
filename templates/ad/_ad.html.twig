@@ -3,7 +3,7 @@
 {% set url = path('ad_show', {'slug': ad.slug}) %}
 
 <div class="col-md-4">
-  <div class="card bg-light mb-3">
+  <div class="card bg-light mb-3 mt-3">
     <div class="card-header text-center">
       {{ ad.rooms }} chambres, <strong> {{ ad.price }}&euro; / nuit</strong> <br>
       {% if ad.comments|length > 0 %}
@@ -35,5 +35,6 @@
     </div>
   </div>
 </div>
+
 
 {% endblock %}
